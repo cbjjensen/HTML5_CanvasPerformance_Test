@@ -1,0 +1,97 @@
+<!DOCTYPE html>    
+<head>
+    <meta charset="utf-8">
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            border: 0;
+            overflow: hidden; /*  Disable scrollbars */
+            display: block;  /* No floating content on sides */
+        }
+    </style>
+</head>
+ 
+<body>
+ 
+    <canvas id="myCanvas" width="1280" height="720"></canvas> 
+    
+    <script>
+        
+        _width = 1280;
+        _height = 720;
+        twopi = 2*Math.PI;
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        function Circle (parXPos, parYPos, parXDir, parYDir, parRadius) {
+             this.xPos = parXPos;
+             this.yPos = parYPos;
+             this.xDirection = parXDir;
+             this.yDirection = parYDir;
+             this.radius = parRadius;
+            
+             this.move = function(){
+                // X movements
+                if(this.xPos + this.xDirection + this.radius >= _width ) {
+                    this.xPos = _width-this.radius;
+                    this.xDirection *= -1;
+                }
+                else if(this.xPos + this.xDirection - this.radius <= 0) {
+                    this.xPos = 0 + (this.radius);
+                    this.xDirection *= -1;
+                }
+                else
+                    this.xPos = this.xPos + this.xDirection;
+
+                // Y Movements
+                if(this.yPos + this.radius + this.yDirection >= _height) {
+                    this.yPos = _height - this.radius;
+                    this.yDirection *= -1;
+                }
+                else if (this.yPos + this.yDirection - this.radius <= 0) {
+                    this.yPos = 0 + this.radius;
+                    this.yDirection *= -1;
+                }
+                else
+                  this.yPos = this.yPos + this.yDirection; 
+             };
+             
+         }
+
+
+        function draw(){     
+            // redraw background       
+            ctx.beginPath();
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0,0,1280,720); 
+            ctx.stroke();
+
+            // redraw circles
+            ctx.beginPath();
+            ctx.fillStyle = "RED";
+            ctx.arc(circle1.xPos, circle1.yPos, circle1.radius,0,twopi);
+            ctx.arc(circle2.xPos, circle2.yPos, circle2.radius,0,twopi);
+            ctx.fill();
+        }
+
+        function main(){
+            
+            circle1.move();
+            circle2.move();
+            draw();
+            requestAnimationFrame(main);
+
+        }
+        
+        var circle1 = new Circle(50,85,3,4,30);
+        var circle2 = new Circle(1280,720,3,4,30);
+        var w = window;
+        main();
+
+    </script>
+    
+</body>
+ 
+</html>
